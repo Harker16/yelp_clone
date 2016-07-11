@@ -60,7 +60,7 @@ feature 'Restaurants' do
     end
   end
 
-  context 'deleting restaurants'
+  context 'deleting restaurants' do
     before { Restaurant.create name: 'KFC', description: 'Deep fried goodness' }
 
     scenario 'removes a restaurant when a user clicks a delete link' do
