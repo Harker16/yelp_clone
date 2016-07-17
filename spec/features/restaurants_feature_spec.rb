@@ -1,8 +1,11 @@
 require 'rails_helper'
 
 feature 'Restaurants' do
-  context 'no restaurants have been added' do
+  before do
+    sign_up
+  end
 
+  context 'no restaurants have been added' do
     scenario 'should display a prompt to add a restaurant' do
       visit '/restaurants'
       expect(page).to have_content 'No restaurants yet'
@@ -43,6 +46,12 @@ feature 'Restaurants' do
       expect(page).to have_content 'KFC'
       expect(current_path).to eq '/restaurants'
     end
+
+    scenario 'does not let user add a restaurant unless logged in' do
+      click_link 'Sign out'
+      visit '/restaurants/new'
+      expect(page).to have_content "You need to sign in or sign up before continuing"
+    end
   end
 
   context 'viewing restaurants' do
@@ -80,5 +89,16 @@ feature 'Restaurants' do
       expect(page).not_to have_content 'KFC'
       expect(page).to have_content 'Restaurant deleted successfully'
     end
+  end
+
+  private
+
+  def sign_up
+    visit('/')
+    click_link('Sign up')
+    fill_in('Email', with: 'test@example.com')
+    fill_in('Password', with: 'testtest')
+    fill_in('Password confirmation', with: 'testtest')
+    click_button('Sign up')
   end
 end
